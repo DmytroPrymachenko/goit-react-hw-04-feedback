@@ -2,23 +2,31 @@ import { useState } from 'react';
 import { NotFeedbackGiven, Statisticsh2 } from './feedback_Staled';
 import Statistic from './statistic';
 
-import Buttons from './button';
+import { Buttons } from './button';
 
 export const Feedback = () => {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
-  const GoodClick = () => {
-    setGood(prevGood => prevGood + 1);
-  };
+  const handlerClick = e => {
+    const { name } = e.currentTarget;
 
-  const NeutralClick = () => {
-    setNeutral(prevNeutral => prevNeutral + 1);
-  };
+    switch (name) {
+      case 'good':
+        setGood(prev => prev + 1);
 
-  const BadClick = () => {
-    setBad(prevBad => prevBad + 1);
+        break;
+      case 'neutral':
+        setNeutral(prev => prev + 1);
+
+        break;
+      case 'bad':
+        setBad(prev => prev + 1);
+
+        break;
+      default:
+    }
   };
 
   const countTotalFeedback = () => {
@@ -34,14 +42,11 @@ export const Feedback = () => {
 
   const totalFeedback = countTotalFeedback();
   const positiveFeedback = countPositiveFeedbackPercentage();
+  const options = ['Good', 'Neutral', 'Bad'];
 
   return (
     <div>
-      <Buttons
-        onGoodClick={GoodClick}
-        onNeutralClick={NeutralClick}
-        onBadClick={BadClick}
-      />
+      <Buttons options={options} onLeaveFeedback={handlerClick} />
       <Statisticsh2>Statistics</Statisticsh2>
       {totalFeedback <= 0 ? (
         <NotFeedbackGiven>Not feedback given</NotFeedbackGiven>
