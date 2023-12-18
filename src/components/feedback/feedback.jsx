@@ -1,63 +1,51 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { NotFeedbackGiven, Statisticsh2 } from './feedback_Staled';
 import Statistic from './statistic';
 
 import Buttons from './button';
 
-export class Feedback extends Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
+export const Feedback = () => {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
+
+  const GoodClick = () => {
+    setGood(prevGood => prevGood + 1);
   };
 
-  Goodlick = () => {
-    this.setState(prev => ({ good: prev.good + 1 }));
-  };
-  NeutralClick = () => {
-    this.setState(prev => ({ neutral: prev.neutral + 1 }));
-  };
-  BadClick = () => {
-    this.setState(prev => ({ bad: prev.bad + 1 }));
+  const NeutralClick = () => {
+    setNeutral(prevNeutral => prevNeutral + 1);
   };
 
-  countTotalFeedback = () => {
-    return this.state.good + this.state.neutral + this.state.bad;
+  const BadClick = () => {
+    setBad(prevBad => prevBad + 1);
   };
-  countPositiveFeedbackPercentage = () => {
-    if (this.countTotalFeedback() > 0) {
-      const result = (this.state.good / this.countTotalFeedback()) * 100;
+
+  const countTotalFeedback = () => {
+    return good + neutral + bad;
+  };
+
+  const countPositiveFeedbackPercentage = () => {
+    if (countTotalFeedback() > 0) {
+      const result = (good / countTotalFeedback()) * 100;
       return result.toFixed(0) + '%';
     }
   };
 
-  render() {
-    const { good, neutral, bad } = this.state;
-    const totalFeedback = this.countTotalFeedback();
-    const positiveFeedback = this.countPositiveFeedbackPercentage();
+  const totalFeedback = countTotalFeedback();
+  const positiveFeedback = countPositiveFeedbackPercentage();
 
-    if (totalFeedback <= 0) {
-      return (
-        <div>
-          <Buttons
-            onGoodClick={this.Goodlick}
-            onNeutralClick={this.NeutralClick}
-            onBadClick={this.BadClick}
-          />
-          <Statisticsh2>Statistics</Statisticsh2>
-          <NotFeedbackGiven>Not feedback given</NotFeedbackGiven>
-        </div>
-      );
-    }
-
-    return (
-      <div>
-        <Buttons
-          onGoodClick={this.Goodlick}
-          onNeutralClick={this.NeutralClick}
-          onBadClick={this.BadClick}
-        />
-        <Statisticsh2>Statistics</Statisticsh2>
+  return (
+    <div>
+      <Buttons
+        onGoodClick={GoodClick}
+        onNeutralClick={NeutralClick}
+        onBadClick={BadClick}
+      />
+      <Statisticsh2>Statistics</Statisticsh2>
+      {totalFeedback <= 0 ? (
+        <NotFeedbackGiven>Not feedback given</NotFeedbackGiven>
+      ) : (
         <Statistic
           good={good}
           neutral={neutral}
@@ -65,7 +53,7 @@ export class Feedback extends Component {
           totalFeedback={totalFeedback}
           positiveFeedback={positiveFeedback}
         />
-      </div>
-    );
-  }
-}
+      )}
+    </div>
+  );
+};
